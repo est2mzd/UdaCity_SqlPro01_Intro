@@ -1,0 +1,84 @@
+https://qiita.com/eighty8/items/82063beab09ab9e41692
+
+-------------------------------------------------
+< How to install Postgre >
+
+1. Update Package
+sudo apt update
+
+2. Install Postgres
+sudo apt install postgresql
+
+3. Confirmation 
+which psql
+
+-------------------------------------------------
+< Initial Settings >
+# There is root user "postgres" initially.
+
+1. Check current user
+sudo -u postgres -i
+psql
+# \du
+# \q
+
+2. Add user whose name is "takuya"
+createuser -d -U postgres -P takuya
+
+3. Check current user (this is the same as Step-1)
+
+4. Create & Set UdaCity Database
+sudo -u postgres -i
+psql
+# CREATE DATABASE parch_and_posey;
+# \q
+
+pg_restore -d parch_and_posey /home/takuya/work/UdaCity_SQL/parch_and_posey_db;
+psql
+
+# \l
+
+-------------------------------------------------
+< Modify Password >
+1. Find pg_hba.conf
+sudo find / -name pg_hba.conf
+----> /etc/postgresql/9.5/main/pg_hba.conf
+
+2. modify Password Settings
+
+      —————————————————–
+      host   all    all  127.0.0.1/32    md5
+      host   all    all        ::1/128      md5
+      —————————————————–
+                                             ↓ ↓ ↓
+      —————————————————–
+      host   all    all  127.0.0.1/32    trust
+      host   all    all        ::1/128      trust
+      —————————————————–
+
+3. Set new Password
+psql -U postgres
+# \password
+#  input your password
+#  input your password 
+# \q
+
+-------------------------------------------------
+< Access Database >
+1. access to the database 
+psql -U postgres -h localhost -d parch_and_posey
+
+2. Command input
+# SELECT * FROM orders;
+
+
+-------------------------------------------------
+< Add Access Rights >
+https://eng-entrance.com/postgresql-role
+
+1. Create Role or User
+# CREATE ROLE <Role_NAme>
+or
+# createuser
+
+
