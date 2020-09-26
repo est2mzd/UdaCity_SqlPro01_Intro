@@ -1,0 +1,4 @@
+SELECT LEFT(name,1) as HEAD, COUNT(*) num
+FROM accounts
+GROUP BY 1
+ORDER BY 2 DESC
