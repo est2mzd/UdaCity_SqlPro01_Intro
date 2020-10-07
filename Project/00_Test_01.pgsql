@@ -19,4 +19,19 @@ CREATE VIEW forestation AS
      );
 
 SELECT *
-FROM forestation;
+FROM forestation
+WHERE country_name = 'World'
+ORDER BY year
+
+with T1 as(
+SELECT SUM(forest_area_sqkm) each_sum
+FROM forest_area
+GROUP BY country_name
+HAVING country_name != 'World'
+)
+
+SELECT SUM(each_sum)
+FROM T1
+
+1093577969
+1084580784
