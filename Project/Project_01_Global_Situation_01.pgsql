@@ -25,7 +25,7 @@ WITH
           SUM(total_area_sqkm) sum_land,
           SUM(forest_area_sqkm) / SUM(total_area_sqkm)  *100 forest_ratio
      FROM forestation
-     WHERE country_name != 'World'
+     WHERE country_name = 'World'
      GROUP BY year),
  T_1990 AS (
      SELECT sum_forest, sum_land
