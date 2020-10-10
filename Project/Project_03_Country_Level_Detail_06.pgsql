@@ -30,26 +30,24 @@ WITH
      GROUP BY 1,2
      ORDER BY 4 DESC),
  T_1990 AS (
-     SELECT country_name, sum_forest, sum_land
+     SELECT country_name, sum_forest, sum_land, forest_ratio
      FROM T_ALL_Year
      WHERE year = 1990
      ORDER BY 1 DESC), 
  T_2016 AS (
-     SELECT country_name, sum_forest, sum_land
+     SELECT country_name, sum_forest, sum_land, forest_ratio
      FROM T_ALL_Year
      WHERE year = 2016
-     ORDER BY 1 DESC), 
- T_DIFF AS (
-     SELECT T_1990.country_name country_name,
-            T_2016.sum_forest - T_1990.sum_forest sum_forest_diff,
-            T_1990.sum_forest sum_forest_1990,
-            T_2016.sum_forest sum_forest_2016
-     FROM T_1990
-     JOIN T_2016 ON T_1990.country_name = T_2016.country_name
-     ORDER BY 2 DESC)  
+     ORDER BY 1 DESC),
+ T_QUARTILE_2016 AS (
+     SELECT T_2016.country_name,
+            region,
+            forest_ratio
+     FROM T_2016
+     JOIN regions ON T_2016.country_name = regions.country_name
+     WHERE forest_ratio > 75)      
 
 SELECT *
-FROM T_DIFF
-WHERE sum_forest_diff IS NOT null
-ORDER BY sum_forest_diff DESC
+FROM T_QUARTILE_2016
+ORDER BY 3 DESC
 
