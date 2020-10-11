@@ -21,34 +21,35 @@ CREATE VIEW forestation AS
 WITH    
  T_ALL_Year AS (
      SELECT year,
-            region,
+            country_name,
           SUM(forest_area_sqkm) sum_forest,
-          SUM(total_area_sqkm) sum_land,
+          SUM(total_area_sqkm)  sum_land,
           SUM(forest_area_sqkm) / SUM(total_area_sqkm)  *100 forest_ratio
      FROM forestation
-     WHERE region != 'World' 
+     WHERE country_name != 'World' 
      GROUP BY 1,2
      ORDER BY 4 DESC),
  T_1990 AS (
-     SELECT region, forest_ratio
+     SELECT country_name, sum_forest, sum_land
      FROM T_ALL_Year
      WHERE year = 1990
      ORDER BY 1 DESC), 
  T_2016 AS (
-     SELECT region, forest_ratio
+     SELECT country_name, sum_forest, sum_land
      FROM T_ALL_Year
      WHERE year = 2016
      ORDER BY 1 DESC), 
  T_DIFF AS (
-     SELECT T_1990.region region,
-            T_2016.forest_ratio - T_1990.forest_ratio forest_ratio_diff,
-            T_1990.forest_ratio forest_ratio_1990,
-            T_2016.forest_ratio forest_ratio_2016
+     SELECT T_1990.country_name country_name,
+            T_2016.sum_forest - T_1990.sum_forest sum_forest_diff,
+            T_1990.sum_forest sum_forest_1990,
+            T_2016.sum_forest sum_forest_2016
      FROM T_1990
-     JOIN T_2016 ON T_1990.region = T_2016.region
-     ORDER BY 2)  
+     JOIN T_2016 ON T_1990.country_name = T_2016.country_name
+     ORDER BY 2 DESC)  
 
-SELECT region, forest_ratio_1990, forest_ratio_2016, forest_ratio_diff
-FROM T_DIFF
-ORDER BY forest_ratio_diff
-LIMIT 5
+SELECT *
+FROM T_2016
+WHERE sum_land IS NOT null
+ORDER BY sum_land DESC
+
